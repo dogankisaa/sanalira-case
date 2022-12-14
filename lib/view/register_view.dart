@@ -18,77 +18,79 @@ class RegisterView extends StatelessWidget {
       value: viewModel = RegisterViewModel(),
       builder: (context, child) {
         return Scaffold(
-          body: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              image: backgroundImage(),
-            ),
-            child: Column(
-              children: [
-                Spacer(),
-                labelLogo(context),
-                Spacer(),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: RegisterConstants().bottomSheetBackGroundColor,
-                        borderRadius: RegisterConstants().bottomSheetRadius),
-                    width: double.infinity,
-                    child: Padding(
-                      padding: RegisterConstants().bottomSheetPadding,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          welcomeText(context),
+          body: SingleChildScrollView(
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                image: backgroundImage(),
+              ),
+              child: Center(
+                child: Column(
+                  children: [
+                    Spacer(),
+                    labelLogo(context),
+                    Spacer(),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: RegisterConstants().bottomSheetBackGroundColor,
+                          borderRadius: RegisterConstants().bottomSheetRadius),
+                      width: double.infinity,
+                      child: Padding(
+                        padding: RegisterConstants().bottomSheetPadding,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            welcomeText(context),
 
-                          const SizedBox(
-                            height: 15,
-                          ),
-
-                          textFieldAndLabel(
-                              RegisterConstants().textFieldLabelName,
-                              viewModel.nameController),
-                          textFieldAndLabel(
-                              RegisterConstants().textFieldLabelSurName,
-                              viewModel.surnameController),
-                          textFieldAndLabel(
-                              RegisterConstants().textFieldLabelMail,
-                              viewModel.mailController),
-                          textFieldPhoneNumber(context, viewModel),
-
-                          //Form End
-
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          checkBoxRow(viewModel, context),
-                          const SizedBox(
-                            height: 15,
-                          ),
-
-                          SizedBox(
-                            height: 47,
-                            child: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: RegisterConstants()
-                                          .loginButtonRadius),
-                                  primary: RegisterConstants()
-                                      .loginButtonBackGround),
-                              child: Center(
-                                child:
-                                    Text(RegisterConstants().loginButtonText),
-                              ),
+                            const SizedBox(
+                              height: 15,
                             ),
-                          )
-                        ],
+
+                            textFieldAndLabel(
+                                RegisterConstants().textFieldLabelName,
+                                viewModel.nameController),
+                            textFieldAndLabel(
+                                RegisterConstants().textFieldLabelSurName,
+                                viewModel.surnameController),
+                            textFieldAndLabel(
+                                RegisterConstants().textFieldLabelMail,
+                                viewModel.mailController),
+                            textFieldPhoneNumber(context, viewModel),
+
+                            //Form End
+
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            checkBoxRow(viewModel, context),
+                            const SizedBox(
+                              height: 15,
+                            ),
+
+                            SizedBox(
+                              height: 47,
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: RegisterConstants()
+                                            .loginButtonRadius),
+                                    primary: RegisterConstants()
+                                        .loginButtonBackGround),
+                                child: Center(
+                                  child:
+                                      Text(RegisterConstants().loginButtonText),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
-                )
-              ],
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
         );
@@ -136,23 +138,26 @@ class RegisterView extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Consumer<RegisterViewModel>(
-          builder: (context, value, child) => SizedBox(
-            height: 24.0,
-            width: 24.0,
-            child: Theme(
-              data: ThemeData(
-                  unselectedWidgetColor:
-                      RegisterConstants().checkBoxOutlineColor),
-              child: Checkbox(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: RegisterConstants().checkBoxRadius,
-                  ),
-                  activeColor: RegisterConstants().checkBoxColor,
-                  value: viewModel.isAgreementCheck,
-                  onChanged: (value) {
-                    viewModel.agreementCheck();
-                  }),
+        Align(
+          alignment: Alignment.topCenter,
+          child: Consumer<RegisterViewModel>(
+            builder: (context, value, child) => SizedBox(
+              height: 20.0,
+              width: 20.0,
+              child: Theme(
+                data: ThemeData(
+                    unselectedWidgetColor:
+                        RegisterConstants().checkBoxOutlineColor),
+                child: Checkbox(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: RegisterConstants().checkBoxRadius,
+                    ),
+                    activeColor: RegisterConstants().checkBoxColor,
+                    value: viewModel.isAgreementCheck,
+                    onChanged: (value) {
+                      viewModel.agreementCheck();
+                    }),
+              ),
             ),
           ),
         ),
@@ -203,7 +208,7 @@ class RegisterView extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              flex: 1,
+              flex: 2,
               child: Container(
                 width: 10,
                 height: 44,
@@ -236,7 +241,7 @@ class RegisterView extends StatelessWidget {
               width: 5,
             ),
             Expanded(
-              flex: 5,
+              flex: 8,
               child: CustomTextField(
                 controller: viewModel.phoneController,
               ),
