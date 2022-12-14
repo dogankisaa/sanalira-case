@@ -31,63 +31,7 @@ class RegisterView extends StatelessWidget {
                     Spacer(),
                     labelLogo(context),
                     Spacer(),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: RegisterConstants().bottomSheetBackGroundColor,
-                          borderRadius: RegisterConstants().bottomSheetRadius),
-                      width: double.infinity,
-                      child: Padding(
-                        padding: RegisterConstants().bottomSheetPadding,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            welcomeText(context),
-
-                            const SizedBox(
-                              height: 15,
-                            ),
-
-                            textFieldAndLabel(
-                                RegisterConstants().textFieldLabelName,
-                                viewModel.nameController),
-                            textFieldAndLabel(
-                                RegisterConstants().textFieldLabelSurName,
-                                viewModel.surnameController),
-                            textFieldAndLabel(
-                                RegisterConstants().textFieldLabelMail,
-                                viewModel.mailController),
-                            textFieldPhoneNumber(context, viewModel),
-
-                            //Form End
-
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            checkBoxRow(viewModel, context),
-                            const SizedBox(
-                              height: 15,
-                            ),
-
-                            SizedBox(
-                              height: 47,
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: RegisterConstants()
-                                            .loginButtonRadius),
-                                    primary: RegisterConstants()
-                                        .loginButtonBackGround),
-                                child: Center(
-                                  child:
-                                      Text(RegisterConstants().loginButtonText),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    )
+                    registerBottomSheet(context, viewModel)
                   ],
                 ),
               ),
@@ -95,6 +39,71 @@ class RegisterView extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Container registerBottomSheet(
+      BuildContext context, RegisterViewModel viewModel) {
+    return Container(
+      decoration: BoxDecoration(
+          color: RegisterConstants().bottomSheetBackGroundColor,
+          borderRadius: RegisterConstants().bottomSheetRadius),
+      width: double.infinity,
+      child: Padding(
+        padding: RegisterConstants().bottomSheetPadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            welcomeText(context),
+            const SizedBox(
+              height: 15,
+            ),
+            Form(
+              key: viewModel.registerFormKey,
+              child: Column(
+                children: [
+                  textFieldAndLabel(RegisterConstants().textFieldLabelName,
+                      viewModel.nameController, viewModel.nameValidator()),
+                  textFieldAndLabel(
+                      RegisterConstants().textFieldLabelSurName,
+                      viewModel.surnameController,
+                      viewModel.surnameValidator()),
+                  textFieldAndLabel(RegisterConstants().textFieldLabelMail,
+                      viewModel.mailController, viewModel.mailValidator()),
+                  textFieldPhoneNumber(
+                      context, viewModel, viewModel.numberValidator()),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            checkBoxRow(viewModel, context),
+            const SizedBox(
+              height: 15,
+            ),
+            loginButton(viewModel)
+          ],
+        ),
+      ),
+    );
+  }
+
+  SizedBox loginButton(RegisterViewModel viewModel) {
+    return SizedBox(
+      height: 47,
+      child: ElevatedButton(
+        onPressed: () {
+          viewModel.login();
+        },
+        style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+                borderRadius: RegisterConstants().loginButtonRadius),
+            primary: RegisterConstants().loginButtonBackGround),
+        child: Center(
+          child: Text(RegisterConstants().loginButtonText),
+        ),
+      ),
     );
   }
 
@@ -195,7 +204,7 @@ class RegisterView extends StatelessWidget {
   }
 
   Column textFieldPhoneNumber(
-      BuildContext context, RegisterViewModel viewModel) {
+      BuildContext context, RegisterViewModel viewModel, validator) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -244,6 +253,7 @@ class RegisterView extends StatelessWidget {
               flex: 8,
               child: CustomTextField(
                 controller: viewModel.phoneController,
+                validator: validator,
               ),
             ),
           ],
@@ -252,25 +262,27 @@ class RegisterView extends StatelessWidget {
     );
   }
 
-  Form textFieldAndLabel(label, controller) {
-    return Form(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextFieldLabel(
-          text: label,
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        CustomTextField(
-          controller: controller,
-        ),
-        SizedBox(
-          height: 8,
-        )
-      ],
-    ));
+  Consumer textFieldAndLabel(label, controller, validator) {
+    return Consumer<RegisterViewModel>(
+      builder: (context, value, child) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextFieldLabel(
+            text: label,
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          CustomTextField(
+            controller: controller,
+            validator: validator,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+        ],
+      ),
+    );
   }
 
   Row labelLogo(BuildContext context) {

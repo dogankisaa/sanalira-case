@@ -28,6 +28,7 @@ class RegisterConstants {
   Color whiteColor = Colors.white;
   Color infoAndAgreementTextColor = const Color.fromRGBO(207, 212, 222, 1);
   Color textInputColor = const Color.fromRGBO(207, 212, 222, 1);
+  Color textInputErrorColor = Colors.red;
   Color textInputCursorColor = const Color.fromRGBO(207, 212, 222, 1);
   Color textInputLabelColor = const Color.fromRGBO(207, 212, 222, 1);
   Color textInputInputColor = const Color.fromRGBO(207, 212, 222, 1);
