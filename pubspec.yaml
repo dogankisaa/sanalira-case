@@ -44,6 +44,7 @@ dependencies:
   auto_route: ^5.0.4
   dio: ^4.0.6
   flutter_svg: ^1.1.6
+  dotted_border: ^2.0.0+3
  
 
 dev_dependencies:
@@ -76,6 +77,8 @@ flutter:
     - country_turkey.png
     - logo.png
     - left_arrow.svg
+    - settings.svg
+    - bell.svg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
