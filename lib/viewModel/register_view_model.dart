@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:sanalira_case/core/services/register.dart';
 import 'package:sanalira_case/viewModel/base_view_model.dart';
 
+import '../core/route/route.gr.dart';
+
 class RegisterViewModel extends BaseViewModel {
   TextEditingController nameController = TextEditingController();
   TextEditingController surnameController = TextEditingController();
@@ -81,9 +83,10 @@ class RegisterViewModel extends BaseViewModel {
     };
   }
 
-  login() {
-    if (registerFormKey.currentState!.validate()) {
-      RegisterService().register(mailController.text, passwordController.text);
+  login(BuildContext context) {
+    if (registerFormKey.currentState!.validate() && isAgreementCheck) {
+      RegisterService()
+          .register(mailController.text, passwordController.text, context);
     }
 
     notifyListeners();

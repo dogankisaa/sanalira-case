@@ -14,9 +14,11 @@ class RegisterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     late RegisterViewModel viewModel;
+    late BuildContext _context;
     return ChangeNotifierProvider.value(
       value: viewModel = RegisterViewModel(),
       builder: (context, child) {
+        _context = context;
         return Scaffold(
           body: SingleChildScrollView(
             child: Container(
@@ -86,19 +88,19 @@ class RegisterView extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            loginButton(viewModel)
+            loginButton(viewModel, context)
           ],
         ),
       ),
     );
   }
 
-  SizedBox loginButton(RegisterViewModel viewModel) {
+  SizedBox loginButton(RegisterViewModel viewModel, BuildContext context) {
     return SizedBox(
       height: 47,
       child: ElevatedButton(
         onPressed: () {
-          viewModel.login();
+          viewModel.login(context);
         },
         style: ElevatedButton.styleFrom(
             shape: RoundedRectangleBorder(
