@@ -8,6 +8,7 @@ class RegisterConstants {
   String infoAndAgreementText = "Bilgilerinizi girip sözleşmeyi onaylayın.";
   String textFieldLabelName = "Ad";
   String textFieldLabelSurName = "Soyad";
+  String textFielLabelPassword = "Şifre";
   String textFieldLabelMail = "E-posta";
   String textFieldLabelNumber = "Cep Telefonu Numaranız";
   String countryCode = "+90";

@@ -70,6 +70,10 @@ class RegisterView extends StatelessWidget {
                       viewModel.surnameValidator()),
                   textFieldAndLabel(RegisterConstants().textFieldLabelMail,
                       viewModel.mailController, viewModel.mailValidator()),
+                  textFieldAndLabel(
+                      RegisterConstants().textFielLabelPassword,
+                      viewModel.passwordController,
+                      viewModel.passwordValidator()),
                   textFieldPhoneNumber(
                       context, viewModel, viewModel.numberValidator()),
                 ],
