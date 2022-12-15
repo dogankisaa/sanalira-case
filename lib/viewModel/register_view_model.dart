@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sanalira_case/core/services/register.dart';
 import 'package:sanalira_case/viewModel/base_view_model.dart';
 
 class RegisterViewModel extends BaseViewModel {
@@ -82,7 +83,7 @@ class RegisterViewModel extends BaseViewModel {
 
   login() {
     if (registerFormKey.currentState!.validate()) {
-      print("object");
+      RegisterService().register(mailController.text, passwordController.text);
     }
 
     notifyListeners();
