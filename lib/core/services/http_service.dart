@@ -14,7 +14,6 @@ class HttpService {
     try {
       response = await _dio.get("");
     } on DioError catch (e) {
-      print(e.message);
       throw Exception(e.message);
     }
     return response;

@@ -1,18 +1,14 @@
 import 'package:dotted_border/dotted_border.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:sanalira_case/core/consts/bank_constants.dart';
-import 'package:sanalira_case/core/consts/general_constants.dart';
+
 import 'package:sanalira_case/core/consts/register_constants.dart';
 import 'package:sanalira_case/core/services/get_bank.dart';
 import 'package:sanalira_case/viewModel/bank_view_model.dart';
-import 'package:sanalira_case/viewModel/register_view_model.dart';
-
-import '../core/widgets/logo_widget.dart';
-import '../core/widgets/registerViewWidgets/text_field.dart';
-import '../core/widgets/registerViewWidgets/text_field_label.dart';
 
 class BankView extends StatelessWidget {
   const BankView({super.key});
@@ -32,7 +28,7 @@ class BankView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    header(),
+                    header(context),
                     const SizedBox(
                       height: 21,
                     ),
@@ -41,7 +37,7 @@ class BankView extends StatelessWidget {
                       height: 13,
                     ),
                     chooseBankText(context),
-                    SizedBox(
+                    const SizedBox(
                       height: 13,
                     ),
                     bankList()
@@ -51,7 +47,8 @@ class BankView extends StatelessWidget {
     );
   }
 
-  Row header() {
+  Row header(BuildContext context) {
+    final viewModel = Provider.of<BankViewModel>(context, listen: false);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -74,10 +71,30 @@ class BankView extends StatelessWidget {
             const SizedBox(
               width: 9,
             ),
-            appBarIcon(BankConstants().settingsIcon),
+            InkWell(
+                onTap: () async {
+                  await FirebaseAuth.instance.signOut();
+                  viewModel.logOut(context);
+                },
+                child: appBarIcon(BankConstants().settingsIcon)),
           ],
         )
       ],
+    );
+  }
+
+  Container appBarIcon(icon) {
+    return Container(
+      height: BankConstants().appBarIconDimensions,
+      width: BankConstants().appBarIconDimensions,
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: SvgPicture.asset(
+          icon,
+        ),
+      ),
     );
   }
 
@@ -202,8 +219,8 @@ class BankView extends StatelessWidget {
                 child: Row(
                   children: [
                     SizedBox(
-                      height: 55,
-                      width: 80,
+                      height: BankConstants().bankListHeight,
+                      width: BankConstants().bankListLogoWith,
                       child: DottedBorder(
                           borderType: BorderType.RRect,
                           radius: BankConstants().bankListPaddingRadius,
@@ -244,7 +261,7 @@ class BankView extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             )
           ],
@@ -257,11 +274,11 @@ class BankView extends StatelessWidget {
     return Padding(
       padding: BankConstants().detailPadding,
       child: Container(
-        height: 450,
+        height: BankConstants().detailBottomSheetHeigth,
         decoration: BoxDecoration(),
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(
@@ -270,53 +287,65 @@ class BankView extends StatelessWidget {
               decoration: BoxDecoration(
                   color: Colors.black, borderRadius: BorderRadius.circular(20)),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             detailInfo(context, BankConstants().detailNameText, name),
             detailInfo(context, BankConstants().detailIbanText, iban),
             detailInfo(
                 context, BankConstants().detailExplanationText, description),
-            Container(
-              height: 44,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: BankConstants().detailInfoBgColor),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50),
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    BankConstants().detailWarning1,
-                    style: Theme.of(context).textTheme.headline4!.copyWith(
-                        color: BankConstants().detailWarningText1Color),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
+            warning1(context),
+            const SizedBox(
               height: 9,
             ),
-            Container(
-              height: 44,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: BankConstants().detailWarningBgColor),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 50),
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    BankConstants().detailWarning2,
-                    style: Theme.of(context).textTheme.headline4!.copyWith(
-                        color: BankConstants().detailWarningText2Color),
-                  ),
-                ),
-              ),
-            )
+            warning2(context)
           ],
+        ),
+      ),
+    );
+  }
+
+  Container warning2(BuildContext context) {
+    return Container(
+      height: 44,
+      width: double.infinity,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: BankConstants().detailWarningBgColor),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 50),
+          child: Text(
+            textAlign: TextAlign.center,
+            BankConstants().detailWarning2,
+            style: Theme.of(context)
+                .textTheme
+                .headline4!
+                .copyWith(color: BankConstants().detailWarningText2Color),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Container warning1(BuildContext context) {
+    return Container(
+      height: 44,
+      width: double.infinity,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: BankConstants().detailInfoBgColor),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 50),
+          child: Text(
+            textAlign: TextAlign.center,
+            BankConstants().detailWarning1,
+            style: Theme.of(context)
+                .textTheme
+                .headline4!
+                .copyWith(color: BankConstants().detailWarningText1Color),
+          ),
         ),
       ),
     );
@@ -334,7 +363,7 @@ class BankView extends StatelessWidget {
               .headline4!
               .copyWith(color: BankConstants().detailLabelCOlor),
         ),
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
         Container(
@@ -362,7 +391,6 @@ class BankView extends StatelessWidget {
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(text: info));
                     viewModel.copyInfo(context, BankConstants().copiedMessage);
-                    Navigator.pop(context);
                   },
                   child: SizedBox(
                       height: 13,
@@ -377,21 +405,6 @@ class BankView extends StatelessWidget {
           height: 15,
         )
       ],
-    );
-  }
-
-  Container appBarIcon(icon) {
-    return Container(
-      height: 36,
-      width: 36,
-      decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: SvgPicture.asset(
-          icon,
-        ),
-      ),
     );
   }
 }

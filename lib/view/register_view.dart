@@ -30,9 +30,9 @@ class RegisterView extends StatelessWidget {
               child: Center(
                 child: Column(
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     labelLogo(context),
-                    Spacer(),
+                    const Spacer(),
                     registerBottomSheet(context, viewModel)
                   ],
                 ),
@@ -135,7 +135,7 @@ class RegisterView extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
         Text(
@@ -176,7 +176,7 @@ class RegisterView extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 6,
         ),
         Flexible(
@@ -217,7 +217,7 @@ class RegisterView extends StatelessWidget {
         TextFieldLabel(
           text: RegisterConstants().textFieldLabelNumber,
         ),
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
         Row(
@@ -252,7 +252,7 @@ class RegisterView extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 5,
             ),
             Expanded(
@@ -276,14 +276,14 @@ class RegisterView extends StatelessWidget {
           TextFieldLabel(
             text: label,
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           CustomTextField(
             controller: controller,
             validator: validator,
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
         ],
@@ -295,8 +295,8 @@ class RegisterView extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Logo(),
-        SizedBox(
+        const Logo(),
+        const SizedBox(
           width: 11,
         ),
         Text(

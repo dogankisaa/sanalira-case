@@ -23,7 +23,8 @@ class BankConstants {
   EdgeInsets currentMoneyInsidePadding =
       const EdgeInsets.symmetric(horizontal: 10);
   BorderRadius bankListRadius = BorderRadius.circular(10);
-  EdgeInsets bankListInsidePadding = const EdgeInsets.symmetric(horizontal: 10);
+  EdgeInsets bankListInsidePadding =
+      const EdgeInsets.symmetric(horizontal: 10, vertical: 10);
   Radius bankListPaddingRadius = const Radius.circular(10);
   EdgeInsets detailPadding = const EdgeInsets.symmetric(horizontal: 15);
 
@@ -50,4 +51,8 @@ class BankConstants {
   double currentMoneyHeight = 56;
   double currentMoneyCountryHeight = 29;
   double bankListHeight = 72;
+  double appBarIconDimensions = 36;
+  double bankListLogoWith = 80;
+  double bankListLogoHeight = 55;
+  double detailBottomSheetHeigth = 430;
 }

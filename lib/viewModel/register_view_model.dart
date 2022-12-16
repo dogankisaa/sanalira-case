@@ -2,8 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sanalira_case/core/services/register.dart';
 import 'package:sanalira_case/viewModel/base_view_model.dart';
-
-import '../core/route/route.gr.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterViewModel extends BaseViewModel {
   TextEditingController nameController = TextEditingController();
@@ -16,6 +15,7 @@ class RegisterViewModel extends BaseViewModel {
       r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,20}$';
 
   final registerFormKey = GlobalKey<FormState>();
+  bool isLogin = false;
   bool isAgreementCheck = false;
   @override
   Future<void> init() async {}
@@ -28,7 +28,6 @@ class RegisterViewModel extends BaseViewModel {
 
   nameValidator() {
     return (value) {
-      print(value);
       if (value.isEmpty) {
         return "Lütfen adınızı giriniz.";
       } else if (value.length < 3) {
@@ -39,7 +38,6 @@ class RegisterViewModel extends BaseViewModel {
 
   surnameValidator() {
     return (value) {
-      print(value);
       if (value.isEmpty) {
         return "Lütfen soyadınızı giriniz.";
       } else if (value.length < 3 || value.length > 50) {
@@ -50,7 +48,6 @@ class RegisterViewModel extends BaseViewModel {
 
   mailValidator() {
     return (value) {
-      print(value);
       if (value.isEmpty) {
         return "Lütfen mail adresinizi giriniz.";
       } else if (!EmailValidator.validate(mailController.text)) {
@@ -61,7 +58,6 @@ class RegisterViewModel extends BaseViewModel {
 
   numberValidator() {
     return (value) {
-      print(value);
       if (value.isEmpty) {
         return "Lütfen numaranızı giriniz.";
       } else if (!RegExp(numberPattern).hasMatch(phoneController.text)) {
@@ -72,7 +68,6 @@ class RegisterViewModel extends BaseViewModel {
 
   passwordValidator() {
     return (value) {
-      print(value);
       if (value.isEmpty) {
         return "Lütfen bir şifre giriniz.";
       } else if (value.length < 6 || value.length > 20) {
@@ -87,8 +82,16 @@ class RegisterViewModel extends BaseViewModel {
     if (registerFormKey.currentState!.validate() && isAgreementCheck) {
       RegisterService()
           .register(mailController.text, passwordController.text, context);
+      isLogin = true;
     }
 
     notifyListeners();
+  }
+
+  loginCheck() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (isLogin) {
+      await prefs.setBool('login', true);
+    }
   }
 }

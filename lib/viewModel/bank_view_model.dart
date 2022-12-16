@@ -1,12 +1,11 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:sanalira_case/core/helper/bottom_sheet.dart';
 import 'package:sanalira_case/core/helper/snacbar.dart';
 import 'package:sanalira_case/core/services/get_bank.dart';
-import 'package:sanalira_case/core/services/register.dart';
-import 'package:sanalira_case/viewModel/base_view_model.dart';
+import 'package:sanalira_case/view/register_view.dart';
 
-import '../core/route/route.gr.dart';
+import 'package:sanalira_case/viewModel/base_view_model.dart';
 
 class BankViewModel extends BaseViewModel {
   @override
@@ -20,6 +19,14 @@ class BankViewModel extends BaseViewModel {
 
   copyInfo(BuildContext context, message) {
     snackBar(context, message);
+    Navigator.pop(context);
     notifyListeners();
+  }
+
+  logOut(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const RegisterView()),
+    );
   }
 }
