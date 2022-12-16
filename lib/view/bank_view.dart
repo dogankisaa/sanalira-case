@@ -1,5 +1,6 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:sanalira_case/core/consts/bank_constants.dart';
@@ -160,7 +161,11 @@ class BankView extends StatelessWidget {
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       return bankListCard(
-                          context, snapshot.data[index]["bankName"]);
+                          context,
+                          snapshot.data[index]["bankName"],
+                          snapshot.data[index]["bankAccountName"],
+                          snapshot.data[index]["bankIban"],
+                          snapshot.data[index]["descriptionNo"]);
                     },
                   ),
                 ),
@@ -178,60 +183,198 @@ class BankView extends StatelessWidget {
     );
   }
 
-  Column bankListCard(BuildContext context, bankName) {
-    return Column(
-      children: [
-        Container(
-          width: double.infinity,
-          height: BankConstants().bankListHeight,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BankConstants().bankListRadius),
-          child: Padding(
-            padding: BankConstants().bankListInsidePadding,
-            child: Row(
-              children: [
-                SizedBox(
-                  height: 55,
-                  width: 80,
-                  child: DottedBorder(
-                      borderType: BorderType.RRect,
-                      radius: BankConstants().bankListPaddingRadius,
-                      color: BankConstants().bankLogoBorderColor,
-                      strokeWidth: 1,
-                      child: Center(
-                          child: Text(
-                        "Logo",
-                        style: Theme.of(context).textTheme.headline2,
-                      ))),
-                ),
-                const SizedBox(
-                  width: 12,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+  Consumer bankListCard(
+      BuildContext context, bankName, name, iban, description) {
+    return Consumer<BankViewModel>(
+      builder: (context, value, child) => InkWell(
+        onTap: () => value.bankDetail(
+            context, bottomSheetBody(context, name, iban, description)),
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              height: BankConstants().bankListHeight,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BankConstants().bankListRadius),
+              child: Padding(
+                padding: BankConstants().bankListInsidePadding,
+                child: Row(
                   children: [
-                    Text(
-                      bankName,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline3!
-                          .copyWith(color: BankConstants().bankListNameColor),
+                    SizedBox(
+                      height: 55,
+                      width: 80,
+                      child: DottedBorder(
+                          borderType: BorderType.RRect,
+                          radius: BankConstants().bankListPaddingRadius,
+                          color: BankConstants().bankLogoBorderColor,
+                          strokeWidth: 1,
+                          child: Center(
+                              child: Text(
+                            "Logo",
+                            style: Theme.of(context).textTheme.headline2,
+                          ))),
                     ),
-                    Text(
-                      BankConstants().bankListSubtitle,
-                      style: Theme.of(context).textTheme.headline3!.copyWith(
-                          color: BankConstants().bankListSubTitleColor),
+                    const SizedBox(
+                      width: 12,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          bankName,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline3!
+                              .copyWith(
+                                  color: BankConstants().bankListNameColor),
+                        ),
+                        Text(
+                          BankConstants().bankListSubtitle,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline3!
+                              .copyWith(
+                                  color: BankConstants().bankListSubTitleColor),
+                        )
+                      ],
                     )
                   ],
-                )
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Padding bottomSheetBody(BuildContext context, name, iban, description) {
+    return Padding(
+      padding: BankConstants().detailPadding,
+      child: Container(
+        height: 450,
+        decoration: BoxDecoration(),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              width: 50,
+              height: 5,
+              decoration: BoxDecoration(
+                  color: Colors.black, borderRadius: BorderRadius.circular(20)),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            detailInfo(context, BankConstants().detailNameText, name),
+            detailInfo(context, BankConstants().detailIbanText, iban),
+            detailInfo(
+                context, BankConstants().detailExplanationText, description),
+            Container(
+              height: 44,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: BankConstants().detailInfoBgColor),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    BankConstants().detailWarning1,
+                    style: Theme.of(context).textTheme.headline4!.copyWith(
+                        color: BankConstants().detailWarningText1Color),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 9,
+            ),
+            Container(
+              height: 44,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: BankConstants().detailWarningBgColor),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    BankConstants().detailWarning2,
+                    style: Theme.of(context).textTheme.headline4!.copyWith(
+                        color: BankConstants().detailWarningText2Color),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Column detailInfo(BuildContext context, label, info) {
+    final viewModel = Provider.of<BankViewModel>(context, listen: false);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: Theme.of(context)
+              .textTheme
+              .headline4!
+              .copyWith(color: BankConstants().detailLabelCOlor),
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        Container(
+          height: 44,
+          width: double.infinity,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: BankConstants().detailInfoBgColor),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    info,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline3!
+                        .copyWith(color: BankConstants().detailInfoTextColor),
+                  ),
+                ),
+                InkWell(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(text: info));
+                    viewModel.copyInfo(context, BankConstants().copiedMessage);
+                    Navigator.pop(context);
+                  },
+                  child: SizedBox(
+                      height: 13,
+                      width: 13,
+                      child: Image.asset(BankConstants().copyIcon)),
+                ),
               ],
             ),
           ),
         ),
         SizedBox(
-          height: 5,
+          height: 15,
         )
       ],
     );

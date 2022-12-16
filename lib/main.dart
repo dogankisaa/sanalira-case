@@ -22,7 +22,6 @@ void main() async {
       builder: (context, child) => MyApp(),
     )
   ]));
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
 }
 
 final _appRouter = AppRouter();
